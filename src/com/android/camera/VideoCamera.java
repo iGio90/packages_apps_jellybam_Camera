@@ -882,6 +882,7 @@ public class VideoCamera extends ActivityBase
             if (!effectsActive()) {
                 mCameraDevice.setPreviewTextureAsync(mSurfaceTexture);
                 mCameraDevice.startPreviewAsync();
+                mCameraDevice.setParameters(mParameters);
             } else {
                 mSurfaceWidth = mCameraScreenNail.getWidth();
                 mSurfaceHeight = mCameraScreenNail.getHeight();
@@ -1853,6 +1854,10 @@ public class VideoCamera extends ActivityBase
         String recordSize = mProfile.videoFrameWidth + "x" + mProfile.videoFrameHeight;
         mParameters.set("video-size", recordSize);
 
+        mCameraDevice.setParameters(mParameters);
+        // Keep preview size up to date.
+        mParameters = mCameraDevice.getParameters();
+
         // Set flash mode.
         String flashMode;
         if (mShowCameraAppView) {
@@ -1938,10 +1943,6 @@ public class VideoCamera extends ActivityBase
         }
 
         CameraSettings.dumpParameters(mParameters);
-
-        mCameraDevice.setParameters(mParameters);
-        // Keep preview size up to date.
-        mParameters = mCameraDevice.getParameters();
 
         updateCameraScreenNailSize(mDesiredPreviewWidth, mDesiredPreviewHeight);
     }
